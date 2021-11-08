@@ -3,7 +3,7 @@ class ProductModel
 {
     public function getList()
     {
-        $data = "product";
+        $data = "product, 2, 3";
 
         return $data;
     }
