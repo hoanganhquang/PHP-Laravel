@@ -1,20 +1,14 @@
 <?php
-class Product extends Controller
-{
-    public $datas = [];
 
+class Product
+{
     public function index()
     {
-        echo "hello";
+        echo "Product Page";
     }
 
     public function getList()
     {
-        $product = $this->model("productModel");
-        $data = $product->getList();
-        $this->datas["sub_content"]["data"] = $data;
-        $this->datas["sub_content"]["num"] = 1;
-        $this->datas["content"] = "products/list";
-        $this->render("layouts/client_layout", $this->datas);
+        echo "Get List products";
     }
 }
