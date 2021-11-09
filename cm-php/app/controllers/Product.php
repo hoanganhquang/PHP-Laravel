@@ -1,14 +1,17 @@
 <?php
 
-class Product
+class Product extends Controller
 {
+
     public function index()
     {
         echo "Product Page";
     }
 
-    public function getList()
+    public function all()
     {
-        echo "Get List products";
+        $products = $this->model("productModel");
+
+        print_r($products->getList());
     }
 }

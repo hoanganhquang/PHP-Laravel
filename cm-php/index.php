@@ -1,6 +1,6 @@
 <?php
 session_start();
 
-require_once "app/Bridge.php";
+require_once "./bootstrap.php";
 
 $app = new App();
