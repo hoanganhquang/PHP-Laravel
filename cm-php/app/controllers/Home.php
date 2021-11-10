@@ -1,8 +1,15 @@
 <?php
-class Home
+class Home extends Controller
 {
     public function index()
     {
-        echo "Homepage";
+        $course = $this->model("course");
+        $courses = $course->all();
+
+        $data["sub_content"]["courses"] = $courses;
+
+        // View
+        $data["content"] = "home/index";
+        $this->render("layouts/client_layout", $data);
     }
 }

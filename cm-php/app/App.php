@@ -51,13 +51,9 @@ class App
         if (!empty($urlArr[0])) {
             $this->__controller = $urlArr[0];
 
-            if (file_exists("app/controllers/" . $urlCheck . ".php")) {
-                require_once "controllers/" . $urlCheck . ".php";
-                $this->__controller = new $this->__controller;
-                unset($urlArr[0]);
-            } else {
-                return $this->showError();
-            }
+            require_once "controllers/" . $urlCheck . ".php";
+            $this->__controller = new $this->__controller;
+            unset($urlArr[0]);
         } else {
             require_once "controllers/" . $this->__controller . ".php";
             $this->__controller = new $this->__controller;
