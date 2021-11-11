@@ -1,7 +1,7 @@
 <?php
 class Course extends Model
 {
-    protected $table = "courses";
+    private $table = "courses";
 
     public function all()
     {
