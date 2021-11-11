@@ -76,17 +76,17 @@
                                 <span>or</span>
                                 <div class="line r"></div>
                             </div>
-                            <form class="register-form" method="POST" action="{{ route('register') }}">
-                                @csrf
+                            <form class="register-form" method="POST" action="/register">
+
                                 <input type="text" name="name" class="form-control" placeholder="Tên của bạn">
 
                                 <input type="text" name="email" class="form-control" placeholder="Email">
 
                                 <input type="password" name="password" class="form-control" placeholder="Mật khẩu">
 
-                                {{-- <input type="password" class="form-control" placeholder="Confirm Password"> --}}
+                                <input type="password" class="form-control" placeholder="Confirm Password">
 
-                                <button type="submit" class="btn btn-block btn-round">Register</button>
+                                <button type="submit" name="submit" class="btn btn-block btn-round">Register</button>
                             </form>
                             <div class="login">
                                 <p>Already have an account? <a href="/login">Log in</a>.</p>

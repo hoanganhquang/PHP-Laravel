@@ -1,4 +1,5 @@
 <?php
+
 class Database
 {
     private $conn;
@@ -21,6 +22,25 @@ class Database
         $query = "select * from $table";
 
         return $this->conn->query($query)->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function selectOne($table, $data)
+    {
+        $query = "select * from $table where $data";
+
+        return $this->conn->query($query)->fetch_assoc();
+    }
+
+    public function createOne($table, $fields, $data)
+    {
+        try {
+            $query = "insert into $table ($fields) values ($data)";
+
+            $this->conn->query($query);
+        } catch (Exception $exception) {
+            $mess = $exception->getMessage();
+            die($mess);
+        }
     }
 
     public function close()

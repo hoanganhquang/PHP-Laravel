@@ -1,4 +1,5 @@
 <?php
+
 class Course extends Model
 {
     private $table = "courses";

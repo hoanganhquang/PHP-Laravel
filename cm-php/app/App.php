@@ -1,5 +1,4 @@
 <?php
-
 class App
 {
     private $__controller, $__action, $__params, $__routes;
@@ -52,11 +51,13 @@ class App
             $this->__controller = $urlArr[0];
 
             require_once "controllers/" . $urlCheck . ".php";
-            $this->__controller = new $this->__controller;
+            $_class = $this->__controller . "Controller";
+            $this->__controller = new $_class;
             unset($urlArr[0]);
         } else {
             require_once "controllers/" . $this->__controller . ".php";
-            $this->__controller = new $this->__controller;
+            $_class = $this->__controller . "Controller";
+            $this->__controller = new $_class;
         }
 
 
