@@ -7,6 +7,7 @@ use App\Models\Course;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -17,28 +18,49 @@ class UserController extends Controller
     public function index()
     {
         $user_id = Auth::user()->id;
-        $countCourse = User::where('id', '=', $user_id)->withCount('courses')->get();
+
+        $query = "
+            select count(*) as total from course_user 
+            INNER JOIN users 
+            on course_user.user_id = users.id where users.id = $user_id;  
+        ";
+
+        $countCourse = DB::select($query)[0]->total;
 
         return view("users.index", ['count' => $countCourse]);
     }
 
     public function myCourses(Request $request)
     {
-        $user = User::find(Auth::user()->id);
+        $id = Auth::user()->id;
+
+        $query = "
+            select courses.* from course_user 
+            INNER JOIN users on course_user.user_id = users.id 
+            INNER JOIN courses on course_user.course_id = courses.id
+            where users.id = $id;
+        ";
+
+        $courses = DB::select($query);
 
         if ($request->isMethod("POST")) {
-            $user->courses()->attach($request->input('courseId'));
+            $course_id = intval($request->input('courseId'));
+            $query = "insert into course_user(user_id, course_id) values ($id, $course_id)";
+
+            DB::insert($query);
+
             return redirect("/my-courses");
         }
 
-        return view("users.courses.index", ["users" => $user]);
+        return view("users.courses.index", ["courses" => $courses]);
     }
 
     public function removeCourse($name)
     {
-        $user = User::find(Auth::user()->id);
-        $course_id = Course::where('name', $name)->first()->id;
-        $user->courses()->detach($course_id);
+        $id = Auth::user()->id;
+        $course_id = DB::select("select id from courses where name = '$name' ")[0]->id;
+
+        DB::delete("delete from course_user where user_id = $id and course_id = $course_id");
 
         return redirect("/my-courses");
     }
@@ -46,21 +68,23 @@ class UserController extends Controller
     public function edit(Request $request)
     {
         if ($request->isMethod("PUT")) {
-            $user = Auth::user();
-            $user = User::find($user->id);
+
+            $id = Auth::user()->id;
+            $user = DB::select("select * from users where id = $id ")[0];
 
             if ($request->input("name")) {
-                $user->name = $request->input("name");
-                $user->email = $request->input("email");
+                $name = $request->input("name");
+                $email = $request->input("email");
+                $image = $user->image;
 
                 if ($request->hasFile("image")) {
                     $file = $request->file("image");
                     $ext = $file->getClientOriginalName();
                     $file->move('assets/uploads/users', $ext);
-                    $user->image = $ext;
+                    $image = $ext;
                 }
 
-                $user->save();
+                DB::update("update users set name = '$name', email = '$email', image = '$image' where id=$id");
 
                 return redirect("/edit");
             }
@@ -70,8 +94,9 @@ class UserController extends Controller
                 $new_password = $request->input("password");
 
                 if (Hash::check($current_password, $user->password)) {
-                    $user->password = Hash::make($new_password);
-                    $user->save();
+                    $password = Hash::make($new_password);
+
+                    DB::update("update users set password = '$password' where id=$id");
                 } else {
                     return redirect("/edit")->withErrors(["password" => "Mật khẩu không đúng"]);
                 }

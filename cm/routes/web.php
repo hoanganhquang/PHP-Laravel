@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\User\UserController;
 use App\Models\Course;
+use Illuminate\Support\Facades\DB;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,11 +21,13 @@ use App\Models\Course;
 
 Route::get('/', function () {
 
+    // Check user logged in
     if (Auth::check()) {
         return redirect('/home');
     }
 
-    $courses = Course::all();
+    // get all courses
+    $courses = DB::select("select * from courses");
 
     return view('home', ["courses" => $courses]);
 });
@@ -38,6 +42,7 @@ Route::get('/remove-course/{name}', [UserController::class, 'removeCourse']);
 Route::match(["GET", "POST"], "/my-courses", [UserController::class, 'myCourses']);
 Route::match(["GET", 'PUT'], '/edit', [UserController::class, 'edit']);
 
+// Admin 
 Route::middleware(["auth", "isAdmin"])->group(function () {
     // Courses
     Route::get('/dashboard', [AdminController::class, "index"]);

@@ -7,6 +7,7 @@ use App\Models\Course;
 use PHPUnit\Framework\Constraint\Count;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -27,11 +28,19 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $courses = Course::all();
+        $courses = DB::select('select * from courses');
         $arr = [];
-        $user = User::find(Auth::user()->id);
-        foreach ($user->courses as $course) {
-            array_push($arr, $course->id);
+        $id = Auth::user()->id;
+        $user = DB::select("select * from users where id = $id")[0];
+
+        $query = "
+            select course_user.course_id from course_user 
+            INNER JOIN users 
+            on course_user.user_id = users.id where users.id = $id;  
+        ";
+        $newArr = DB::select($query);
+        foreach ($newArr as $key => $value) {
+            array_push($arr, $value->course_id);
         }
         $countRegister = Course::withCount("users")->orderBy('users_count', 'desc')->get();
 

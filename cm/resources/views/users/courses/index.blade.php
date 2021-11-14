@@ -21,7 +21,7 @@
 
                                         </thead>
                                         <tbody>
-                                            @foreach ($users->courses as $course)
+                                            @foreach ($courses as $course)
                                             <tr>
                                                 <td></td>                     
                                                 <td>{{$course->name}}</td>
@@ -29,7 +29,7 @@
                                                 <td>
                                                     <img src="{{ asset("assets/uploads/courses/".$course->image) }}" alt="hinh" style="border-radius: 7px; width: 130px">
                                                 </td>
-                                                <td>{{$course->pivot->created_at->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y, H:i:s')}}</td>
+                                                <td>{{$course->created_at}}</td>
                                                 <td></td>
                                             </tr>
                                             @endforeach

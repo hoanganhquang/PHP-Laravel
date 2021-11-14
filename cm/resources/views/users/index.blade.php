@@ -16,7 +16,7 @@
                                     <div class="col-7">
                                         <div class="numbers">
                                             <p class="card-category">Đã đăng ký</p>
-                                            <h4 class="card-title">{{ $count[0]->courses_count }}</h4>
+                                            <h4 class="card-title">{{ $count }}</h4>
                                     </div>
                                 </div>
                              </div>

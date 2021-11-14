@@ -31,7 +31,7 @@
                                                 <td>
                                                     <img src="{{ asset("assets/uploads/courses/".$course->image) }}" alt="hinh" style="border-radius: 7px; width: 130px">
                                                 </td>
-                                                <td>{{$course->created_at->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y, H:i:s')}}</td>
+                                                <td>{{$course->created_at}}</td>
                                                 <td></td>
                                             </tr>
                                             @endforeach

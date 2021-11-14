@@ -3,105 +3,112 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Course;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
+    // dashboard home page 
     public function index()
     {
         $user = Auth::user();
-        $courses = Course::all()->count();
-        $users = User::all()->count();
+
+        $courses = DB::select('select count(*) as courses from courses')[0]->courses;
+        $users = DB::select('select count(*) as users from users')[0]->users;
+
         return view("admin.index", ["user" => $user, "courses" => $courses, "users" => $users]);
     }
 
+    // dashboard page all courses 
     public function showCourse()
     {
-        $courses = Course::all();
+        $courses = DB::select('select * from courses');
+
         return view("admin.courses.index", ["courses" => $courses]);
     }
 
+    // dashboard page add course
     public function addCourse(Request $request)
     {
         if ($request->isMethod("POST")) {
-            $course = new Course();
-
+            $image = "";
             if ($request->hasFile('image')) {
                 $file = $request->file("image");
                 $ext = $file->getClientOriginalName();
                 $file->move('assets/uploads/courses', $ext);
-                $course->image = $ext;
+                $image = $ext;
             }
 
-            $course->name = $request->input("name");
-            $course->description = $request->input("description");
+            $name = $request->input("name");
+            $description = $request->input("description");
 
-            $course->save();
+            DB::insert("insert into courses(name, description, image) values ('$name', '$description', '$image')");
         }
         return view("admin.courses.add");
     }
 
+    // dashboard page edit course
     public function editCourse(Request $request, $id)
     {
-        $course = Course::find($id);
+        $course = DB::select("select * from courses where id = $id ")[0];
 
         if ($request->isMethod("PUT")) {
-
+            $image = $course->image;
             if ($request->hasFile('image')) {
                 $file = $request->file("image");
                 $ext = $file->getClientOriginalName();
                 $file->move('assets/uploads/courses', $ext);
-                $course->image = $ext;
+                $image = $ext;
             }
 
-            $course->name = $request->input("name");
-            $course->description = $request->input("description");
+            $name = $request->input("name");
+            $description = $request->input("description");
 
-            $course->save();
-
+            DB::update("update courses set name = '$name', description = '$description', image = '$image' where id=$id");
             return redirect("/courses");
         }
 
         return view("admin.courses.edit", ["course" => $course]);
     }
 
+    // delete course
     public function deleteCourse($id)
     {
-        Course::destroy($id);
+        DB::delete("delete from courses where id = $id");
 
         return redirect("/courses");
     }
 
-    // Users
+    // dashboard page all users
     public function showUser()
     {
-        $users = User::all();
+        $users = DB::select("select * from users");
+
         return view("admin.users.index", ["users" => $users]);
     }
 
+    // dashboard page edit users
     public function edituser(Request $request, $id)
     {
-        $user = User::find($id);
+        $user = DB::select("select * from users where id = $id ")[0];
 
         if ($request->isMethod("PUT")) {
-
+            $image = $user->image;
             if ($request->hasFile('image')) {
                 $file = $request->file("image");
                 $ext = $file->getClientOriginalName();
                 $file->move('assets/uploads/users', $ext);
-                $user->image = $ext;
+                $image = $ext;
             }
 
-            $user->name = $request->input("name");
-            $user->email = $request->input("email");
+            $name = $request->input("name");
+            $email = $request->input("email");
 
-            $user->password = Hash::make($request->input("password"));;
+            $password = Hash::make($request->input("password"));;
 
-            $user->save();
+            DB::update("update users set name = '$name', email = '$email', password = '$password', image = '$image' where id=$id");
 
             return redirect("/users");
         }
@@ -109,9 +116,10 @@ class AdminController extends Controller
         return view("admin.users.edit", ["user" => $user]);
     }
 
+    // delete user
     public function deleteUser($id)
     {
-        User::destroy($id);
+        DB::delete("delete from users where id = $id");
 
         return redirect("/users");
     }
