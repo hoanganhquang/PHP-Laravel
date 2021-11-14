@@ -208,10 +208,10 @@
                 <div class="card-footer text-center">
                   @auth
                       @if (Auth::user()->role === "admin")
-                        @foreach ($count as $item)
-                            @if ($item->id === $course->id)
+                        @foreach ($count as $key=>$value)
+                            @if ($value->id === $course->id)
                               <button class="btn btn-success btn-round">
-                                Số lượng đăng ký: {{$item->users_count}}
+                                Số lượng đăng ký: {{$value->count}}
                               </button>
                             @endif
                         @endforeach
