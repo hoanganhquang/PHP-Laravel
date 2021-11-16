@@ -17,10 +17,25 @@
                      <li class="nav-item dropdown">
                          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">Tài khoản</a>
                          <ul class="dropdown-menu dropdown-menu-right dropdown-danger">
-                             <a class="dropdown-item" href="/login"><i class="nc-icon nc-lock-circle-open"></i>&nbsp; Đăng
-                                 nhập</a>
-                             <a class="dropdown-item" href="/register"><i class="nc-icon nc-bookmark-2"></i>&nbsp; Đăng ký</a>
-                             <a class="dropdown-item" href="#"><i class="nc-icon nc-bookmark-2"></i>&nbsp; Quên mật khẩu</a>
+                             <?php if (!empty($auth)) : ?>
+                                 <a class="dropdown-item" href="/profile"><i class="nc-icon nc-lock-circle-open"></i>&nbsp; Dashboard</a>
+                                 <a class="dropdown-item" href="/logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                     <i class="nc-icon nc-bookmark-2"></i>&nbsp; Đăng xuất
+                                     <form id="logout-form" action="/logout" method="POST">
+
+                                     </form>
+                                 </a>
+
+                             <?php else : ?>
+                                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">Tài khoản</a>
+                                 <ul class="dropdown-menu dropdown-menu-right dropdown-danger">
+                                     <a class="dropdown-item" href="/login"><i class="nc-icon nc-lock-circle-open"></i>&nbsp; Đăng
+                                         nhập</a>
+                                     <a class="dropdown-item" href="/register"><i class="nc-icon nc-bookmark-2"></i>&nbsp; Đăng ký</a>
+                                     <a class="dropdown-item" href="#"><i class="nc-icon nc-bookmark-2"></i>&nbsp; Quên mật khẩu</a>
+                                 </ul>
+
+                             <?php endif ?>
                          </ul>
                      </li>
                      <li class="nav-item">
@@ -39,10 +54,14 @@
                      <h1 class="title">Welcome!</h1>
                      <h3 class="description">Học từ ngày hôm nay</h3>
                      <br />
-                     <a href="/login" class="btn btn-neutral btn-round"><i class="fa fa-play"></i>Đăng nhập</a>
-                     <a type="button" href="/register" class="btn btn-outline-neutral btn-round">
-                         Đăng ký
-                     </a>
+                     <?php if (!empty($auth)) : ?>
+                         <a href="#" class="btn btn-neutral btn-round"><i class="fa fa-play"></i> <?= $auth["name"] ?> </a>
+                     <?php else : ?>
+                         <a href="/login" class="btn btn-neutral btn-round"><i class="fa fa-play"></i>Đăng nhập</a>
+                         <a type="button" href="/register" class="btn btn-outline-neutral btn-round">
+                             Đăng ký
+                         </a>
+                     <?php endif ?>
                  </div>
              </div>
          </div>

@@ -36,14 +36,13 @@
                         <div class="col-md-4 col-sm-6 ml-auto mr-auto">
                             <div class="card card-register">
                                 <h3 class="card-title">Đăng nhập tài khoản</h3>
-                                <form class="register-form" method="POST" action="{{ route('login') }}">
-                                    @csrf
+                                <form class="register-form" method="POST" action="/login">
                                     <label>Email</label>
                                     <input type="email" name="email" class="form-control no-border" placeholder="Email" />
 
                                     <label>Mật khẩu</label>
                                     <input type="password" name="password" class="form-control no-border" placeholder="Password" />
-                                    <button class="btn btn-danger btn-block btn-round">
+                                    <button type="submit" name="submit" class="btn btn-danger btn-block btn-round">
                                         Đăng nhập
                                     </button>
                                 </form>

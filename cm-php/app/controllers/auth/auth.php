@@ -4,11 +4,27 @@ class AuthController extends Controller
 {
     public function login()
     {
-        $data["sub_content"] = [];
-        $data["content"] = "auth/login";
+        $auth = $this->model("auth");
+
+        $datas["content"] = "auth/login";
+        $datas["sub_content"] = [];
+
+        if (isset($_POST["submit"])) {
+            $email = $_POST["email"];
+            $password = $_POST["password"];
+
+            $data = ["email" => $email, "password" => $password];
+
+            if (!$auth->login($data)) {
+                header('Location: /login');
+            }
+
+            $datas["content"] = "home/index";
+            $datas["sub_content"]["auth"] = $auth::auth();
+        }
 
         // View
-        $this->render("layouts/client_layout", $data);
+        $this->render("layouts/client_layout", $datas);
     }
 
     public function register()
@@ -21,7 +37,9 @@ class AuthController extends Controller
             $password = $_POST["password"];
             $password = password_hash($password, PASSWORD_DEFAULT);
 
-            $auth->register("'$name', '$email', '$password'");
+            $data = ["name" => $name, "email" => $email, "password" => $password];
+
+            $auth->register($data);
 
             header('Location: /home');
         }
@@ -31,5 +49,12 @@ class AuthController extends Controller
 
         // View
         $this->render("layouts/client_layout", $data);
+    }
+
+    public function logout()
+    {
+        $auth = $this->model("auth");
+
+        $auth->logout();
     }
 }
