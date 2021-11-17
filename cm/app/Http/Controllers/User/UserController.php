@@ -50,6 +50,21 @@ class UserController extends Controller
         return view("users.courses.index", ["courses" => $courses]);
     }
 
+    public function searchCourse()
+    {
+        $name = $_POST["name"];
+
+        if ($name == "") {
+            return redirect("/my-courses");
+        }
+
+        $query = "call searchCourse('$name')";
+
+        $courses = DB::select($query);
+
+        return view("users.courses.index", ["courses" => $courses]);
+    }
+
     public function removeCourse($name)
     {
         $id = Auth::user()->id;

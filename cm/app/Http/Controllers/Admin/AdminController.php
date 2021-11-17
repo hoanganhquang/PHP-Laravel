@@ -77,11 +77,11 @@ class AdminController extends Controller
     {
         $name = $_POST["name"];
 
-        if ($name == "") {
+        if ($name == "" || $name == " ") {
             return redirect("/courses");
         }
 
-        $query = "select * from courses where match(name) against ('$name')";
+        $query = "call searchCourse('$name')";
 
         $courses = DB::select($query);
 
@@ -129,6 +129,21 @@ class AdminController extends Controller
         }
 
         return view("admin.users.edit", ["user" => $user]);
+    }
+
+    public function searchUser()
+    {
+        $name = $_POST["name"];
+
+        if ($name == "") {
+            return redirect("/users");
+        }
+
+        $query = "call searchUser('$name')";
+
+        $users = DB::select($query);
+
+        return view("admin.users.index", ["users" => $users]);
     }
 
     // delete user

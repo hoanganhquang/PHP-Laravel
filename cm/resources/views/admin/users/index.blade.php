@@ -7,6 +7,13 @@
                         <div class="col-md-12">
                             <div class="card bootstrap-table">
                                 <div class="card-body table-full-width">
+                                    <div class="pull-left search" >
+                                        <form action="{{ url("users/searchUser") }}" method="POST" style="display: flex;">
+                                            @csrf
+                                            <input class="form-control" name="name" type="text" placeholder="Search" style="margin-left: 12px;">
+                                            <button type="submit" style="background-color: white; border: none;"><i class="fa fa-search"></i></button>
+                                        </form>
+                                    </div>
                                     <div class="toolbar">
                                         <!--        Here you can write extra buttons/actions for the toolbar              -->
                                     </div>

@@ -38,6 +38,7 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::get('/profile', [UserController::class, 'index']);
 Route::get('/remove-course/{name}', [UserController::class, 'removeCourse']);
+Route::post('/my-courses/searchCourse', [UserController::class, 'searchCourse']);
 Route::match(["GET", "POST"], "/my-courses", [UserController::class, 'myCourses']);
 Route::match(["GET", 'PUT'], '/edit', [UserController::class, 'edit']);
 
@@ -52,6 +53,7 @@ Route::middleware(["auth", "isAdmin"])->group(function () {
     Route::match(["GET", "PUT"], "/edit-course/{id}", [AdminController::class, "editCourse"]);
 
     // Users
+    Route::post('/users/searchUser', [AdminController::class, "searchUser"]);
     Route::get("/users", [AdminController::class, "showUser"]);
     Route::get("/user/{id}", [AdminController::class, "deleteUser"]);
     Route::match(["GET", "PUT"], "/edit-user/{id}", [AdminController::class, "editUser"]);
