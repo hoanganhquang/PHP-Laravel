@@ -326,7 +326,7 @@ var $table = $('#bootstrap-table');
             toolbar: ".toolbar",
             clickToSelect: true,
             showRefresh: true,
-            search: true,
+            search: false,
             showToggle: true,
             showColumns: true,
             pagination: true,

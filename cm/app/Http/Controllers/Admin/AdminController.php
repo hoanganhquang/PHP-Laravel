@@ -73,6 +73,21 @@ class AdminController extends Controller
         return view("admin.courses.edit", ["course" => $course]);
     }
 
+    public function searchCourse()
+    {
+        $name = $_POST["name"];
+
+        if ($name == "") {
+            return redirect("/courses");
+        }
+
+        $query = "select * from courses where match(name) against ('$name')";
+
+        $courses = DB::select($query);
+
+        return view("admin.courses.index", ["courses" => $courses]);
+    }
+
     // delete course
     public function deleteCourse($id)
     {
