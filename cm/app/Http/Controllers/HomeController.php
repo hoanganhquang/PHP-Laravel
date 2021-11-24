@@ -28,6 +28,7 @@ class HomeController extends Controller
         $arr = [];
         $id = Auth::user()->id;
 
+        // get all courses id that user registered
         $query = "
             select course_user.course_id from course_user 
             INNER JOIN users 
@@ -39,6 +40,7 @@ class HomeController extends Controller
             array_push($arr, $value->course_id);
         }
 
+        // Count the number of people who register for each course
         $query = "
         select courses.id, count(course_id) as count from courses 
         left join course_user on courses.id = course_user.course_id

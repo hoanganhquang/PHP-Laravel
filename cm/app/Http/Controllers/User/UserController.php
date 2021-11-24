@@ -10,10 +10,12 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    // user dashboard main 
     public function index()
     {
         $user_id = Auth::user()->id;
 
+        // user's course statistics
         $query = "
             select count(*) as total from course_user 
             INNER JOIN users 
@@ -29,6 +31,7 @@ class UserController extends Controller
     {
         $id = Auth::user()->id;
 
+        // get all course was registered by user
         $query = "
             select courses.* from course_user 
             INNER JOIN users on course_user.user_id = users.id 
@@ -40,6 +43,8 @@ class UserController extends Controller
 
         if ($request->isMethod("POST")) {
             $course_id = intval($request->input('courseId'));
+
+            // add user_id and course_id into course_user table
             $query = "insert into course_user(user_id, course_id) values ($id, $course_id)";
 
             DB::insert($query);
@@ -50,6 +55,7 @@ class UserController extends Controller
         return view("users.courses.index", ["courses" => $courses]);
     }
 
+    // fullTextSearch course
     public function searchCourse()
     {
         $name = $_POST["name"];
@@ -58,6 +64,7 @@ class UserController extends Controller
             return redirect("/my-courses");
         }
 
+        // fullTextSearch by searchCourse procedure
         $query = "call searchCourse('$name')";
 
         $courses = DB::select($query);
@@ -65,6 +72,7 @@ class UserController extends Controller
         return view("users.courses.index", ["courses" => $courses]);
     }
 
+    // cancel course registration
     public function removeCourse($name)
     {
         $id = Auth::user()->id;
@@ -75,13 +83,16 @@ class UserController extends Controller
         return redirect("/my-courses");
     }
 
+    // edit user info
     public function edit(Request $request)
     {
         if ($request->isMethod("PUT")) {
 
+            // get user by id
             $id = Auth::user()->id;
             $user = DB::select("select * from users where id = $id ")[0];
 
+            // check if user edit info
             if ($request->input("name")) {
                 $name = $request->input("name");
                 $email = $request->input("email");
@@ -99,6 +110,7 @@ class UserController extends Controller
                 return redirect("/edit");
             }
 
+            // Check if user edit password
             if ($request->input("password")) {
                 $current_password = $request->input("current_password");
                 $new_password = $request->input("password");

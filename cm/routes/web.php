@@ -44,7 +44,7 @@ Route::match(["GET", 'PUT'], '/edit', [UserController::class, 'edit']);
 
 // Admin 
 Route::middleware(["auth", "isAdmin"])->group(function () {
-    // Courses
+    // Course management
     Route::get('/dashboard', [AdminController::class, "index"]);
     Route::post('/courses/searchCourse', [AdminController::class, "searchCourse"]);
     Route::get("/courses", [AdminController::class, "showCourse"]);
@@ -52,7 +52,7 @@ Route::middleware(["auth", "isAdmin"])->group(function () {
     Route::match(["GET", "POST"], "/add-course", [AdminController::class, "addCourse"]);
     Route::match(["GET", "PUT"], "/edit-course/{id}", [AdminController::class, "editCourse"]);
 
-    // Users
+    // User management
     Route::post('/users/searchUser', [AdminController::class, "searchUser"]);
     Route::get("/users", [AdminController::class, "showUser"]);
     Route::get("/user/{id}", [AdminController::class, "deleteUser"]);
